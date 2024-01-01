@@ -30,6 +30,7 @@ import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import React, { useState } from "react";
 import FlightSearchResults, { FlightSearchResultsProps } from "./FlightSearchResults";
+import { PopoverArrow, PopoverClose } from "@radix-ui/react-popover";
 
 const FormSchema = z.object({
   departure: z.string({
@@ -118,6 +119,7 @@ export function FlightSearchForm() {
                               key={airport.code}
                               onSelect={() => {
                                 form.setValue("departure", airport.code);
+
                               }}
                             >
                               <Check
@@ -133,6 +135,11 @@ export function FlightSearchForm() {
                           ))}
                         </CommandGroup>
                       </Command>
+                      <div className="flex  justify-end p-4">
+                        <PopoverClose>
+                          <Button className="bg-blue-500 drop-shadow-md">X</Button>
+                        </PopoverClose>
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -193,6 +200,11 @@ export function FlightSearchForm() {
                           ))}
                         </CommandGroup>
                       </Command>
+                      <div className="flex  justify-end p-4">
+                        <PopoverClose>
+                          <Button className="bg-blue-500 drop-shadow-md">X</Button>
+                        </PopoverClose>
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -235,6 +247,11 @@ export function FlightSearchForm() {
                         }
                         initialFocus
                       />
+                      <div className="flex  justify-end p-4">
+                      <PopoverClose>
+                        <Button className="bg-blue-500 drop-shadow-md">X</Button>
+                      </PopoverClose>
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -276,6 +293,11 @@ export function FlightSearchForm() {
                         }
                         initialFocus
                       />
+                      <div className="flex  justify-end p-4">
+                      <PopoverClose>
+                        <Button className="bg-blue-500 drop-shadow-md">X</Button>
+                      </PopoverClose>
+                      </div>
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
