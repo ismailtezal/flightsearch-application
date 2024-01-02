@@ -22,7 +22,7 @@ const ReturnDateField: React.FC<ReturnDateFieldProps> = ({ control, form }) => {
             name="returnDate"
             render={({ field }) => (
                 <FormItem className="flex flex-col">
-                    <FormLabel>Dönüş tarihi</FormLabel>
+                    <FormLabel htmlFor="returnDate">Dönüş tarihi</FormLabel>
                     <Popover>
                         <PopoverTrigger asChild>
                             <FormControl>
@@ -33,6 +33,8 @@ const ReturnDateField: React.FC<ReturnDateFieldProps> = ({ control, form }) => {
                                         !field.value && "text-muted-foreground"
                                     )}
                                     disabled={form.watch("flighType") === "oneway"}
+                                    aria-haspopup="true"
+                                    aria-expanded={field.value ? "true" : "false"}
                                 >
                                     {field.value ? (
                                         format(field.value, "PPP")
@@ -52,6 +54,7 @@ const ReturnDateField: React.FC<ReturnDateFieldProps> = ({ control, form }) => {
                                     date < new Date()
                                 }
                                 initialFocus
+                                aria-label="Calendar"
                             />
                             <div className="flex justify-end p-4">
                                 <PopoverClose>
@@ -60,7 +63,7 @@ const ReturnDateField: React.FC<ReturnDateFieldProps> = ({ control, form }) => {
                             </div>
                         </PopoverContent>
                     </Popover>
-                    <FormMessage />
+                    <FormMessage role="alert" />
                 </FormItem>
             )}
         />

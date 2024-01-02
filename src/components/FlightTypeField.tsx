@@ -20,7 +20,7 @@ const FlightTypeField: React.FC<FlightTypeFieldProps> = ({ control, form }) => {
             defaultValue="oneway"
             render={({ field }) => (
                 <FormItem className="space-y-1">
-                    <FormLabel>Bilet tipi</FormLabel>
+                    <FormLabel htmlFor="flightType">Bilet tipi</FormLabel>
                     <FormControl>
                         <RadioGroup
                             onValueChange={field.onChange}
@@ -29,17 +29,17 @@ const FlightTypeField: React.FC<FlightTypeFieldProps> = ({ control, form }) => {
                         >
                             <FormItem className="flex py-2 items-center space-x-3 space-y-0">
                                 <FormControl>
-                                    <RadioGroupItem value="oneway" />
+                                    <RadioGroupItem value="oneway" id="oneway" />
                                 </FormControl>
-                                <FormLabel className="font-normal">
+                                <FormLabel htmlFor="oneway" className="font-normal">
                                     Tek yön
                                 </FormLabel>
                             </FormItem>
                             <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
-                                    <RadioGroupItem value="roundtrip" />
+                                    <RadioGroupItem value="roundtrip" id="roundtrip" />
                                 </FormControl>
-                                <FormLabel className="font-normal">
+                                <FormLabel htmlFor="roundtrip" className="font-normal">
                                     Gidiş-Dönüş
                                 </FormLabel>
                             </FormItem>

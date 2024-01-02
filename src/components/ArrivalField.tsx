@@ -24,13 +24,16 @@ const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) 
             name="arrival"
             render={({ field }) => (
                 <FormItem className="flex flex-col">
-                    <FormLabel>Varış havaalanı</FormLabel>
+                    <FormLabel htmlFor="arrival-input">Varış havaalanı</FormLabel>
                     <Popover>
                         <PopoverTrigger asChild>
                             <FormControl>
                                 <Button
                                     variant="outline"
                                     role="combobox"
+                                    aria-haspopup="listbox"
+                                    aria-expanded={field.value ? "true" : "false"}
+                                    aria-owns="arrival-options"
                                     className={cn(
                                         "w-full h-[50px] justify-between text-lg",
                                         !field.value && "text-muted-foreground"
@@ -45,9 +48,14 @@ const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) 
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent className="w-full p-0">
+                        <PopoverContent id="arrival-options" className="w-full p-0" role="listbox">
                             <Command>
-                                <CommandInput placeholder="Şehir veya havaalanı yazın..." />
+                                <CommandInput
+                                    id="arrival-input"
+                                    placeholder="Şehir veya havaalanı yazın..."
+                                    aria-controls="arrival-options"
+                                    aria-autocomplete="list"
+                                />
                                 <CommandEmpty>Havaalanı Bulunamadı...</CommandEmpty>
                                 <CommandGroup>
                                     {airports.map((airport) => (
@@ -55,7 +63,9 @@ const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) 
                                             value={airport.name}
                                             key={airport.code}
                                             className="text-lg"
-                                            onSelect={() => {
+                                            role="option"
+                                            aria-selected={airport.code === field.value ? "true" : "false"}
+                                            onClick={() => {
                                                 form.setValue("arrival", airport.code);
                                             }}
                                         >
