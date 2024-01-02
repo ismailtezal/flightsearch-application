@@ -28,9 +28,6 @@ import { PopoverClose } from '@radix-ui/react-popover';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 
-
-
-
 interface DepartureFieldProps {
     control: any;
     form: any;
@@ -44,13 +41,16 @@ const DepartureField: React.FC<DepartureFieldProps> = ({ control, form, airports
             name="departure"
             render={({ field }) => (
                 <FormItem className="flex flex-col ">
-                    <FormLabel>Kalkış havaalanı</FormLabel>
+                    <FormLabel htmlFor="departure-input">Kalkış havaalanı</FormLabel>
                     <Popover>
                         <PopoverTrigger asChild>
                             <FormControl>
                                 <Button
                                     variant="outline"
                                     role="combobox"
+                                    aria-haspopup="listbox"
+                                    aria-expanded={field.value ? "true" : "false"}
+                                    aria-labelledby="departure-input"
                                     className={cn(
                                         "w-full h-[50px] justify-between text-lg",
                                         !field.value && "text-muted-foreground"
@@ -67,17 +67,23 @@ const DepartureField: React.FC<DepartureFieldProps> = ({ control, form, airports
                         </PopoverTrigger>
                         <PopoverContent className="w-full p-0 ">
                             <Command>
-                                <CommandInput placeholder="Şehir veya havaalanı yazın..." />
+                                <CommandInput
+                                    id="departure-input"
+                                    placeholder="Şehir veya havaalanı yazın..."
+                                    aria-autocomplete="list"
+                                    aria-controls="departure-options"
+                                />
                                 <CommandEmpty>Havaalanı Bulunamadı...</CommandEmpty>
-                                <CommandGroup>
+                                <CommandGroup id="departure-options">
                                     {airports.map((airport) => (
                                         <CommandItem
                                             value={airport.name}
                                             className="text-lg"
                                             key={airport.code}
+                                            role="option"
+                                            aria-selected={airport.code === field.value ? "true" : "false"}
                                             onSelect={() => {
                                                 form.setValue("departure", airport.code);
-
                                             }}
                                         >
                                             <Check
@@ -93,9 +99,9 @@ const DepartureField: React.FC<DepartureFieldProps> = ({ control, form, airports
                                     ))}
                                 </CommandGroup>
                             </Command>
-                            <div className="flex  justify-end p-4">
+                            <div className="flex justify-end p-4">
                                 <PopoverClose>
-                                    <X className=" hover:bg-blue-600 drop-shadow rounded text-white bg-blue-500" />
+                                    <X className="hover:bg-blue-600 drop-shadow rounded text-white bg-blue-500" />
                                 </PopoverClose>
                             </div>
                         </PopoverContent>
@@ -104,8 +110,7 @@ const DepartureField: React.FC<DepartureFieldProps> = ({ control, form, airports
                 </FormItem>
             )}
         />
-    )
-
+    );
 }
 
 export default DepartureField;

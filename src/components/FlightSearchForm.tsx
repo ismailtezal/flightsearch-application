@@ -1,14 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-
 import useAirports from "@/hooks/use-airports";
 import { useState } from "react";
 import FlightSearchResults, { FlightSearchResultsProps } from "./FlightSearchResults";
 import { Separator } from "./ui/separator";
-
 import DepartureField from "./DepartureField";
 import ArrivalField from "./ArrivalField";
 import DepartureDateField from "./DepartureDateField";
@@ -61,14 +58,14 @@ export function FlightSearchForm() {
     });
   }
 
-
-
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6 rounded bg-blue-50 p-5"
+          role="search"
+          aria-label="Flight Search Form"
         >
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <DepartureField control={form.control} form={form} airports={airports} />

@@ -45,7 +45,7 @@ const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
     }, [allFlights, departure, arrival, departureDate, returnDate]);
 
     if (flightsError) {
-        return <div>Error loading flights</div>;
+        return <div role="alert">Error loading flights</div>;
     }
 
     if (!outboundFlights) {
@@ -54,8 +54,8 @@ const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
 
     return (
         <>
-            {outboundFlights.length > 0 &&
-                (<div className="flex flex-col space-y-4">
+            {outboundFlights.length > 0 && (
+                <div className="flex flex-col space-y-4">
                     <div className="bg-white p-4 drop-shadow-2xl rounded-md">
                         <h2 className="text-2xl font-bold mb-4">Giden Uçuşlar</h2>
                         {outboundFlights.length === 0 ? (
@@ -92,10 +92,8 @@ const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
                         </div>
                     )}
                 </div>
-                )
-            }
+            )}
         </>
-
     );
 };
 
