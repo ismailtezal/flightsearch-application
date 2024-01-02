@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Navigation, LocateFixed, CalendarSearchIcon } from "lucide-react";
+import { Check, Navigation, LocateFixed, CalendarSearchIcon, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -30,7 +30,8 @@ import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import React, { useState } from "react";
 import FlightSearchResults, { FlightSearchResultsProps } from "./FlightSearchResults";
-import { PopoverArrow, PopoverClose } from "@radix-ui/react-popover";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 const FormSchema = z.object({
   departure: z.string({
@@ -42,8 +43,9 @@ const FormSchema = z.object({
   departureDate: z.date({
     required_error: "Lütfen gidiş tarihi seçiniz.",
   }),
-  returnDate: z.date({
-    required_error: "Lütfen dönüş tarihi seçiniz.",
+  returnDate: z.date().optional(),
+  flighType: z.enum(["oneway", "roundtrip"], {
+    required_error: "Bilet tipi seçiniz.",
   }),
 });
 
@@ -61,18 +63,21 @@ export function FlightSearchForm() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-
-    // TODO DEBUG THE 1 DAY BEFORE PROBLEM
     const modifiedDepartureDate = new Date(data.departureDate);
     modifiedDepartureDate.setDate(modifiedDepartureDate.getDate() + 1);
-
+  
+    const modifiedReturnDate = data.returnDate ? new Date(data.returnDate) : null;
+    if (modifiedReturnDate) {
+      modifiedReturnDate.setDate(modifiedReturnDate.getDate() + 1);
+    }
+  
     setFlights({
       ...data,
       departureDate: modifiedDepartureDate.toISOString().split("T")[0],
-      returnDate: data.returnDate ? new Date(data.returnDate).toISOString() : "",
+      returnDate: modifiedReturnDate ? modifiedReturnDate.toISOString().split("T")[0] : "",
     });
   }
-
+  
   return (
     <>
       <Form {...form}>
@@ -137,7 +142,7 @@ export function FlightSearchForm() {
                       </Command>
                       <div className="flex  justify-end p-4">
                         <PopoverClose>
-                          <Button className="bg-blue-500 drop-shadow-md">X</Button>
+                          <X className=" hover:bg-blue-600 drop-shadow rounded text-white bg-blue-500" />
                         </PopoverClose>
                       </div>
                     </PopoverContent>
@@ -202,7 +207,7 @@ export function FlightSearchForm() {
                       </Command>
                       <div className="flex  justify-end p-4">
                         <PopoverClose>
-                          <Button className="bg-blue-500 drop-shadow-md">X</Button>
+                          <X className=" hover:bg-blue-600 drop-shadow rounded text-white bg-blue-500" />
                         </PopoverClose>
                       </div>
                     </PopoverContent>
@@ -247,10 +252,10 @@ export function FlightSearchForm() {
                         }
                         initialFocus
                       />
-                      <div className="flex  justify-end p-4">
-                      <PopoverClose>
-                        <Button className="bg-blue-500 drop-shadow-md">X</Button>
-                      </PopoverClose>
+                      <div className="flex justify-end p-2">
+                        <PopoverClose>
+                          <X className=" hover:bg-blue-600 drop-shadow rounded text-white bg-blue-500" />
+                        </PopoverClose>
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -273,20 +278,22 @@ export function FlightSearchForm() {
                             "w-full h-[50px] pl-3 text-left text-lg font-normal",
                             !field.value && "text-muted-foreground"
                           )}
+                          disabled={form.watch("flighType") === "oneway"}
                         >
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span>Pick a date</span>
+                            <span>Dönüş tarihi seçiniz</span>
                           )}
                           <CalendarSearchIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
+
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
+                        selected={field.value === null ? undefined : field.value}
                         onSelect={field.onChange}
                         disabled={(date) =>
                           date < new Date()
@@ -294,12 +301,48 @@ export function FlightSearchForm() {
                         initialFocus
                       />
                       <div className="flex  justify-end p-4">
-                      <PopoverClose>
-                        <Button className="bg-blue-500 drop-shadow-md">X</Button>
-                      </PopoverClose>
+                        <PopoverClose>
+                          <X className=" hover:bg-blue-600 drop-shadow rounded text-white bg-blue-500" />
+                        </PopoverClose>
                       </div>
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+
+            />
+            <FormField
+              control={form.control}
+              name="flighType"
+              defaultValue="oneway"
+              render={({ field }) => (
+                <FormItem className="space-y-1 ">
+                  <FormLabel>Bilet tipi</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-row items-center"
+                    >
+                      <FormItem className="flex py-2 items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="oneway" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Tek yön
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="roundtrip" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Gidiş-Dönüş
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
