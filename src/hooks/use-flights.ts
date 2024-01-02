@@ -20,7 +20,7 @@ const useFlights = () => {
     useEffect(() => {
         const fetchFlights = async () => {
             try {
-                const response = await axios.get('https://run.mocky.io/v3/02d18779-8cd2-4097-af1b-61198153e940');
+                const response = await axios.get('https://run.mocky.io/v3/f2d026f3-a0b3-4d26-8083-565aee87f6e0');
                 setFlights(response.data.flights);
                 setLoading(false);
             } catch (error) {
