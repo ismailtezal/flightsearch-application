@@ -5,7 +5,7 @@ export interface FlightSearchResultsProps {
     departure: string;
     arrival: string;
     departureDate: string;
-    returnDate: string;
+    returnDate?: string;
 }
 
 const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
@@ -14,54 +14,88 @@ const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
     departureDate,
     returnDate,
 }) => {
-    const [loading, setLoading] = useState(true);
-    const [flights, setFlights] = useState<Flight[]>([]);
     const { flights: allFlights, loading: flightsLoading, error: flightsError } = useFlights();
+    const [outboundFlights, setOutboundFlights] = useState<Flight[]>([]);
+    const [returnFlights, setReturnFlights] = useState<Flight[]>([]);
 
     useEffect(() => {
-        console.log(departureDate);
-        const filteredFlights = allFlights.filter((flight) => {
-            const isMatch =
+        const filteredOutboundFlights = allFlights.filter((flight) => {
+            let isMatch =
                 flight.departureAirport === departure &&
                 flight.arrivalAirport === arrival &&
                 new Date(flight.departureTime).toISOString().split("T")[0] === departureDate;
+
             return isMatch;
         });
-        setFlights(filteredFlights);
-        setLoading(false);
+
+        setOutboundFlights(filteredOutboundFlights);
+
+        if (returnDate) {
+            const filteredReturnFlights = allFlights.filter((flight) => {
+                let isMatch =
+                    flight.departureAirport === arrival &&
+                    flight.arrivalAirport === departure &&
+                    new Date(flight.departureTime).toISOString().split("T")[0] === returnDate;
+
+                return isMatch;
+            });
+
+            setReturnFlights(filteredReturnFlights);
+        }
     }, [allFlights, departure, arrival, departureDate, returnDate]);
-
-
-
-    if (loading || flightsLoading) {
-        return <div>Loading...</div>;
-    }
 
     if (flightsError) {
         return <div>Error loading flights</div>;
     }
 
-    if (flights.length === 0) {
-        return <div>No matching flights found for the given criteria</div>;
+    if (!outboundFlights) {
+        return null;
     }
 
     return (
-        <div className='flex'>
-            <div className='bg-white p-4 drop-shadow-2xl rounded-md'>
-                {flights.map((flight) => (
-                    <div key={flight.id}>
-                        <p>{flight.airline}</p>
-                        <p>Departure: {flight.departureAirport}</p>
-                        <p>Arrival: {flight.arrivalAirport}</p>
-                        <p>Departure Time: {flight.departureTime}</p>
-                        <p>Arrival Time: {flight.arrivalTime}</p>
-                        <p>Duration: {flight.duration}</p>
-                        <p>Price: {flight.price}</p>
+        <>
+            {outboundFlights.length > 0 &&
+                (<div className="flex space-x-4">
+                    <div className="bg-white p-4 drop-shadow-2xl rounded-md">
+                        <h2 className="text-2xl font-bold mb-4">Bulunan uçuşlar</h2>
+                        {outboundFlights.length === 0 ? (
+                            <p>No matching outbound flights found</p>
+                        ) : (
+                            outboundFlights.map((flight) => (
+                                <div key={flight.id} className="mb-4 border-b pb-2">
+                                    <p className="text-lg font-semibold">{flight.airline}</p>
+                                    <p>Departure: {flight.departureAirport}</p>
+                                    <p>Arrival: {flight.arrivalAirport}</p>
+                                    <p>Departure Time: {flight.departureTime}</p>
+                                    <p>Arrival Time: {flight.arrivalTime}</p>
+                                    <p>Duration: {flight.duration}</p>
+                                    <p>Price: {flight.price}</p>
+                                </div>
+                            ))
+                        )}
                     </div>
 
-                ))}
-            </div>
-        </div>
+                    {returnDate && returnFlights.length > 0 && (
+                        <div className="bg-white p-4 drop-shadow-2xl rounded-md">
+                            <h2 className="text-2xl font-bold mb-4">Return Flights</h2>
+                            {returnFlights.map((flight) => (
+                                <div key={flight.id} className="mb-4 border-b pb-2">
+                                    <p className="text-lg font-semibold">{flight.airline}</p>
+                                    <p>Departure: {flight.departureAirport}</p>
+                                    <p>Arrival: {flight.arrivalAirport}</p>
+                                    <p>Departure Time: {flight.departureTime}</p>
+                                    <p>Arrival Time: {flight.arrivalTime}</p>
+                                    <p>Duration: {flight.duration}</p>
+                                    <p>Price: {flight.price}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                )
+            }
+        </>
+
     );
 };
 
