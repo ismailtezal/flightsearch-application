@@ -32,6 +32,7 @@ import React, { useState } from "react";
 import FlightSearchResults, { FlightSearchResultsProps } from "./FlightSearchResults";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Separator } from "./ui/separator";
 
 const FormSchema = z.object({
   departure: z.string({
@@ -65,19 +66,19 @@ export function FlightSearchForm() {
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const modifiedDepartureDate = new Date(data.departureDate);
     modifiedDepartureDate.setDate(modifiedDepartureDate.getDate() + 1);
-  
+
     const modifiedReturnDate = data.returnDate ? new Date(data.returnDate) : null;
     if (modifiedReturnDate) {
       modifiedReturnDate.setDate(modifiedReturnDate.getDate() + 1);
     }
-  
+
     setFlights({
       ...data,
       departureDate: modifiedDepartureDate.toISOString().split("T")[0],
       returnDate: modifiedReturnDate ? modifiedReturnDate.toISOString().split("T")[0] : "",
     });
   }
-  
+
   return (
     <>
       <Form {...form}>
@@ -353,12 +354,15 @@ export function FlightSearchForm() {
               Uçuş ara
             </Button>
           </div>
-          <FlightSearchResults
-            departure={flights.departure}
-            arrival={flights.arrival}
-            departureDate={flights.departureDate}
-            returnDate={flights.returnDate}
-          />
+          <Separator />
+          <div className="h-full">
+            <FlightSearchResults
+              departure={flights.departure}
+              arrival={flights.arrival}
+              departureDate={flights.departureDate}
+              returnDate={flights.returnDate}
+            />
+          </div>
         </form>
       </Form>
     </>
