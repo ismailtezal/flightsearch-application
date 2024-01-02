@@ -55,9 +55,9 @@ const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
     return (
         <>
             {outboundFlights.length > 0 &&
-                (<div className="flex space-x-4">
+                (<div className="flex flex-col space-y-4">
                     <div className="bg-white p-4 drop-shadow-2xl rounded-md">
-                        <h2 className="text-2xl font-bold mb-4">Bulunan uçuşlar</h2>
+                        <h2 className="text-2xl font-bold mb-4">Giden Uçuşlar</h2>
                         {outboundFlights.length === 0 ? (
                             <p>No matching outbound flights found</p>
                         ) : (
@@ -77,7 +77,7 @@ const FlightSearchResults: React.FC<FlightSearchResultsProps> = ({
 
                     {returnDate && returnFlights.length > 0 && (
                         <div className="bg-white p-4 drop-shadow-2xl rounded-md">
-                            <h2 className="text-2xl font-bold mb-4">Return Flights</h2>
+                            <h2 className="text-2xl font-bold mb-4">Dönen Uçuşlar</h2>
                             {returnFlights.map((flight) => (
                                 <div key={flight.id} className="mb-4 border-b pb-2">
                                     <p className="text-lg font-semibold">{flight.airline}</p>

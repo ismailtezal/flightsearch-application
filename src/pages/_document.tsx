@@ -9,7 +9,7 @@ export default function Document() {
         <meta name="author" content="Your Name" />
         <title>Flight Search Application</title>
       </Head>
-      <body>
+      <body className='bg-blue-500'>
         <Main />
         <NextScript />
       </body>
