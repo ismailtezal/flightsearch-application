@@ -24,7 +24,6 @@ import { Check, Navigation, X } from "lucide-react";
 
 import { Airport } from '@/hooks/use-airports';
 import { PopoverClose } from '@radix-ui/react-popover';
-import { UseFormReturn, useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 
 interface DepartureFieldProps {
@@ -33,7 +32,7 @@ interface DepartureFieldProps {
     airports: Airport[];
 }
 
-const DepartureField: React.FC<DepartureFieldProps> = ({ control, form, airports }) => {
+const DepartureField: React.FC<DepartureFieldProps> = ({ form, airports }) => {
     return (
         <FormField
             control={form.control}
