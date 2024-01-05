@@ -1,11 +1,7 @@
-// FlightTypeField.tsx
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { FormControl } from "@/components/ui/form";
-import { useForm, UseFormReturn } from 'react-hook-form';
-import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { FormSchema } from './FlightSearchForm';
 
 interface FlightTypeFieldProps {
     control: any;
