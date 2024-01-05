@@ -1,16 +1,20 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import useAirports from "@/hooks/use-airports";
+
 import { useState } from "react";
-import FlightSearchResults, { FlightSearchResultsProps } from "./FlightSearchResults";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import useAirports from "@/hooks/use-airports";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
 import { Separator } from "./ui/separator";
+import { Form } from "./ui/form";
+
+import FlightSearchResults, { FlightSearchResultsProps } from "./FlightSearchResults";
 import DepartureField from "./DepartureField";
 import ArrivalField from "./ArrivalField";
 import DepartureDateField from "./DepartureDateField";
 import ReturnDateField from "./ReturnDateField";
-import { Form } from "./ui/form";
 import FlightTypeField from "./FlightTypeField";
 
 const initialState: FlightSearchResultsProps = {
@@ -20,7 +24,7 @@ const initialState: FlightSearchResultsProps = {
   returnDate: "",
 };
 
-export const FormSchema = z.object({
+export const flightFormSchema = z.object({
   departure: z.string({
     required_error: "Lütfen Kalkış noktası seçiniz.",
   }),
@@ -45,11 +49,11 @@ const modifyDate = (date: Date, daysToAdd: number): string => {
 const FlightSearchForm = () => {
   const { airports, loading: airportsLoading, error: airportsError } = useAirports();
   const [flights, setFlights] = useState<FlightSearchResultsProps>(initialState);
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof flightFormSchema>>({
+    resolver: zodResolver(flightFormSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: z.infer<typeof flightFormSchema>) => {
     const modifiedDepartureDate = modifyDate(new Date(data.departureDate), 1);
 
     const modifiedReturnDate = data.returnDate
