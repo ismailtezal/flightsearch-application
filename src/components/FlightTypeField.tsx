@@ -12,7 +12,7 @@ const FlightTypeField: React.FC<FlightTypeFieldProps> = ({ control, form }) => {
     return (
         <FormField
             control={control}
-            name="flighType"
+            name="flightType"
             defaultValue="oneway"
             render={({ field }) => (
                 <FormItem className="space-y-1">
