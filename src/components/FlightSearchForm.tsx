@@ -13,6 +13,13 @@ import ReturnDateField from "./ReturnDateField";
 import { Form } from "./ui/form";
 import FlightTypeField from "./FlightTypeField";
 
+const initialState: FlightSearchResultsProps = {
+  departure: "",
+  arrival: "",
+  departureDate: "",
+  returnDate: "",
+};
+
 export const FormSchema = z.object({
   departure: z.string({
     required_error: "Lütfen Kalkış noktası seçiniz.",
@@ -24,74 +31,65 @@ export const FormSchema = z.object({
     required_error: "Lütfen gidiş tarihi seçiniz.",
   }),
   returnDate: z.date().optional(),
-  flighType: z.enum(["oneway", "roundtrip"], {
+  flightType: z.enum(["oneway", "roundtrip"], {
     required_error: "Bilet tipi seçiniz.",
   }),
 });
 
-export function FlightSearchForm() {
-  const { airports, loading: airportsLoading, error: airportsError } = useAirports();
-  const [flights, setFlights] = useState<FlightSearchResultsProps>({
-    departure: "",
-    arrival: "",
-    departureDate: "",
-    returnDate: "",
-  });
+const modifyDate = (date: Date, daysToAdd: number): string => {
+  const modifiedDate = new Date(date);
+  modifiedDate.setDate(modifiedDate.getDate() + daysToAdd);
+  return modifiedDate.toISOString().split("T")[0];
+};
 
+const FlightSearchForm = () => {
+  const { airports, loading: airportsLoading, error: airportsError } = useAirports();
+  const [flights, setFlights] = useState<FlightSearchResultsProps>(initialState);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const modifiedDepartureDate = new Date(data.departureDate);
-    modifiedDepartureDate.setDate(modifiedDepartureDate.getDate() + 1);
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    const modifiedDepartureDate = modifyDate(new Date(data.departureDate), 1);
 
-    const modifiedReturnDate = data.returnDate ? new Date(data.returnDate) : null;
-    if (modifiedReturnDate) {
-      modifiedReturnDate.setDate(modifiedReturnDate.getDate() + 1);
-    }
+    const modifiedReturnDate = data.returnDate
+      ? modifyDate(new Date(data.returnDate), 1)
+      : "";
 
     setFlights({
       ...data,
-      departureDate: modifiedDepartureDate.toISOString().split("T")[0],
-      returnDate: modifiedReturnDate ? modifiedReturnDate.toISOString().split("T")[0] : "",
+      departureDate: modifiedDepartureDate,
+      returnDate: modifiedReturnDate,
     });
-  }
+  };
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 rounded bg-blue-50 p-5"
-          role="search"
-          aria-label="Flight Search Form"
-        >
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <DepartureField control={form.control} form={form} airports={airports} />
-            <ArrivalField control={form.control} form={form} airports={airports} />
-            <DepartureDateField control={form.control} />
-            <ReturnDateField control={form.control} form={form} />
-            <FlightTypeField control={form.control} form={form} />
-          </div>
-          <div className="flex justify-end">
-            <Button type="submit" className="w-32">
-              Uçuş ara
-            </Button>
-          </div>
-          <Separator />
-          <div className="h-full">
-            <FlightSearchResults
-              departure={flights.departure}
-              arrival={flights.arrival}
-              departureDate={flights.departureDate}
-              returnDate={flights.returnDate}
-            />
-          </div>
-        </form>
-      </Form>
-    </>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-6 rounded bg-blue-50 p-5"
+        role="search"
+        aria-label="Flight Search Form"
+      >
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <DepartureField control={form.control} form={form} airports={airports} />
+          <ArrivalField control={form.control} form={form} airports={airports} />
+          <DepartureDateField control={form.control} />
+          <ReturnDateField control={form.control} form={form} />
+          <FlightTypeField control={form.control} form={form} />
+        </div>
+        <div className="flex justify-end">
+          <Button type="submit" className="w-32">
+            Uçuş ara
+          </Button>
+        </div>
+        <Separator />
+        <div className="h-full">
+          <FlightSearchResults {...flights} />
+        </div>
+      </form>
+    </Form>
   );
-}
+};
 
 export default FlightSearchForm;
