@@ -6,10 +6,8 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { Check, LocateFixed, X } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { Airport } from '@/hooks/use-airports';
-import { useForm, UseFormReturn } from 'react-hook-form';
 import { Button } from './ui/button';
 import { PopoverClose } from '@radix-ui/react-popover';
-import { flightFormSchema } from './FlightSearchForm';
 
 interface ArrivalFieldProps {
     control: any;
