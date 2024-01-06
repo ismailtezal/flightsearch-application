@@ -9,7 +9,7 @@ import { Airport } from '@/hooks/use-airports';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { Button } from './ui/button';
 import { PopoverClose } from '@radix-ui/react-popover';
-import { FormSchema } from './FlightSearchForm';
+import { flightFormSchema } from './FlightSearchForm';
 
 interface ArrivalFieldProps {
     control: any;
