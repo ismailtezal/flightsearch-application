@@ -32,7 +32,7 @@ const ReturnDateField: React.FC<ReturnDateFieldProps> = ({ control, form }) => {
                                         "w-full h-[50px] pl-3 text-left text-lg font-normal",
                                         !field.value && "text-muted-foreground"
                                     )}
-                                    disabled={form.watch("flighType") === "oneway"}
+                                    disabled={form.watch("flightType") === "oneway"}
                                     aria-haspopup="true"
                                     aria-expanded={field.value ? "true" : "false"}
                                 >
