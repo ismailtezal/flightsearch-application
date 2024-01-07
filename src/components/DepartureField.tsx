@@ -76,8 +76,8 @@ const DepartureField: React.FC<DepartureFieldProps> = ({ form, airports }) => {
                                     {airports.map((airport) => (
                                         <CommandItem
                                             value={airport.name}
-                                            className="text-lg"
                                             key={airport.code}
+                                            className="text-lg"
                                             role="option"
                                             aria-selected={airport.code === field.value ? "true" : "false"}
                                             onSelect={() => {

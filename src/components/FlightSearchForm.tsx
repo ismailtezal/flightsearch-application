@@ -77,7 +77,7 @@ const FlightSearchForm = () => {
       >
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <DepartureField control={form.control} form={form} airports={airports} />
-          <ArrivalField control={form.control} form={form} airports={airports} />
+          <ArrivalField  control={form.control} form={form} airports={airports} />
           <DepartureDateField control={form.control} />
           <ReturnDateField control={form.control} form={form} />
           <FlightTypeField control={form.control} form={form} />

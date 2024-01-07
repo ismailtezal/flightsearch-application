@@ -15,10 +15,10 @@ interface ArrivalFieldProps {
     airports: Airport[];
 }
 
-const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) => {
+const ArrivalField: React.FC<ArrivalFieldProps> = ({ form, airports }) => {
     return (
         <FormField
-            control={control}
+            control={form.control}
             name="arrival"
             render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -46,7 +46,7 @@ const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) 
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent id="arrival-options" className="w-full p-0" role="listbox">
+                        <PopoverContent className="w-full p-0">
                             <Command>
                                 <CommandInput
                                     id="arrival-input"
@@ -55,7 +55,7 @@ const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) 
                                     aria-autocomplete="list"
                                 />
                                 <CommandEmpty>Havaalanı Bulunamadı...</CommandEmpty>
-                                <CommandGroup>
+                                <CommandGroup id='arrival-options'>
                                     {airports.map((airport) => (
                                         <CommandItem
                                             value={airport.name}
@@ -63,7 +63,7 @@ const ArrivalField: React.FC<ArrivalFieldProps> = ({ control, form, airports }) 
                                             className="text-lg"
                                             role="option"
                                             aria-selected={airport.code === field.value ? "true" : "false"}
-                                            onClick={() => {
+                                            onSelect={() => {
                                                 form.setValue("arrival", airport.code);
                                             }}
                                         >
